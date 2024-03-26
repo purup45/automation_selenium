@@ -1,0 +1,26 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+## for google colabs
+# chrome_options = webdriver.ChromeOptions()
+# print(chrome_options)
+# chrome_options.add_argument('--headless')
+# chrome_options.add_argument('--no-sandbox')
+# #chrome_options.headless = True
+# wd = webdriver.Chrome(options=chrome_options)
+
+## if manually installing the driver
+#service_Service("/Users/Prem/documents/chromedriver")
+#wd=webdriver.chrome(service=service_obj)
+
+##auto installation
+wd=webdriver.Chrome()
+
+wd.get("https://rahulshettyacademy.com/AutomationPractice/")
+checkboxes=wd.find_elements(By.XPATH, "//input[@type='checkbox']")
+print(len(checkboxes))
+for checkbox in checkboxes:
+  if checkbox.get_attribute("value")=="option2":
+    checkbox.click()
+    break
+time.sleep(10)
