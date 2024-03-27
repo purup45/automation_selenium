@@ -1,0 +1,20 @@
+from selenium import webdriver
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.by import By
+import time
+
+wd=webdriver.Chrome()
+wd.get("https://rahulshettyacademy.com/client")
+
+wd.find_element(By.LINK_TEXT,"Forgot password?").click()
+
+wd.find_element(By.XPATH,"//input[@placeholder='Enter your email address']").send_keys("example@gmail.com")
+#wd.find_element(By.XPATH,"//form/div[1]/input").send_keys("example2@gmail.com")
+
+wd.find_element(By.CSS_SELECTOR,"form div:nth-child(2) input").send_keys("Hello@123")
+wd.find_element(By.CSS_SELECTOR,"#confirmPassword").send_keys('Hello@123')
+
+#wd.find_element(By.XPATH,"//button[@type='submit]").click()
+wd.find_element(By.XPATH,'//button[text()="Save New Password"]').click()
+
+time.sleep(1)
