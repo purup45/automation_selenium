@@ -1,0 +1,32 @@
+from selenium import webdriver
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.by import By
+import time
+
+wd=webdriver.Chrome()
+wd.get("https://rahulshettyacademy.com/AutomationPractice")
+
+
+
+#radiobuttons
+radiobuttons=wd.find_elements(By.CSS_SELECTOR,'.radioButton')
+print(len(radiobuttons))
+radiobuttons[2].click()
+assert radiobuttons[2].is_selected()
+##hideText
+assert wd.find_element(By.ID,"displayed-text").is_displayed()
+wd.find_element(By.ID,'hide-textbox').click()
+assert not wd.find_element(By.ID,"displayed-text").is_displayed()
+##alert(switch_to)
+name="Pratyuth"
+wd.find_element(By.CSS_SELECTOR,"#name").send_keys(name)
+wd.find_element(By.ID,'alertbtn').click()
+alert=wd.switch_to.alert
+alertText=alert.text
+print(alertText)
+#to test the result
+assert name in alertText
+#to accept alert
+alert.accept()
+#to dismiss alert
+#alert.dismiss()
