@@ -1,0 +1,55 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+
+# chrome_options = webdriver.ChromeOptions()
+# print(chrome_options)
+# chrome_options.add_argument('--headless')
+# chrome_options.add_argument('--no-sandbox')
+# #chrome_options.headless = True
+# wd = webdriver.Chrome(options=chrome_options)
+## if manually installing the driver
+#service_Service("/Users/Prem/documents/chromedriver")
+#wd=webdriver.chrome(service=service_obj)
+wd=webdriver.Chrome()
+wd.get("https://rahulshettyacademy.com/angularpractice/")
+
+##ID, Xpath, name, CSSSelector, ClassName, linkText, PartialLink
+## Xpath=>//tagname[@attribute='value']
+##click(),send_keys(),text=>grabs the text
+wd.find_element(By.NAME,"name").send_keys("Riya")
+wd.find_element(By.NAME,"email").send_keys("xample@gmail.com")
+wd.find_element(By.ID,"exampleInputPassword1").send_keys("12345")
+##in cssslector for id           ==>#;
+##in cssslector for className    ==>.classname;
+#wd.find_element(By.CSS_SELECTOR,"#exampleInputPassword1").send_keys("12345")
+wd.find_element(By.CSS_SELECTOR,"input[type='checkbox']").click()
+#wd.find_element(By.XPATH, "//input[@name='bday']").send_keys("04/09/2000")
+#wd.find_element(By.CSS_SELECTOR, "input[ name='bday']").send_keys("04/09/2000")
+
+
+wd.find_element(By.XPATH,"//input[@id='inlineRadio1']").click()
+wd.find_element(By.XPATH,"//input[@value='Submit']").click()
+
+msg=wd.find_element(By.CSS_SELECTOR,".alert.alert-success.alert-dismissible").text
+print(msg)
+
+##if you want to clear any field, use .clear()
+#wd.find_element(By.NAME,"name").clear()
+
+
+
+
+#wd.find_element(By.NAME,"email").send_keys("example@mail.com")
+#wd.find_element(By.XPATH,"//")
+
+# wd.get("https://rahulshettyacademy.com/AutomationPractice/")
+# checkboxes=wd.find_elements(By.XPATH, "//input[@type='checkbox']")
+# print(len(checkboxes))
+# print(wd.title)
+# print(wd.current_url)
+# for checkbox in checkboxes:
+#   if checkbox.get_attribute("value")=="option2":
+#     checkbox.click()
+#     break
+time.sleep(2)
