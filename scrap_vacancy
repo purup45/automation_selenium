@@ -1,0 +1,71 @@
+from selenium import webdriver
+from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.common import NoSuchElementException, ElementNotInteractableException
+from selenium.webdriver.support import expected_conditions as EC
+import time
+from bs4 import BeautifulSoup
+import requests
+import lxml
+import pandas as pd
+
+wd = webdriver.Chrome()
+url = "https://www.blmis.gov.bt/jobseeker_page/mispage"
+wd.get(url)
+wd.implicitly_wait(15)
+
+
+# html_text=requests.get(url)
+# soup=BeautifulSoup(html_text,'lxml')
+# jobs=soup.find_all('title', class_="transition-colors")
+# print(jobs)
+#wd.find_elements(By.ID, "job-result")
+
+selected=Select(wd.find_element(By.XPATH,"//div[1]//div[3]//div[1]//div[1]//div[1]//div[1]//div[2]//div[1]//div[1]//div[1]//div[1]//div[1]//select[1]"))
+selected.select_by_visible_text('Accountant')
+
+state=Select(wd.find_element(By.XPATH,"//div[1]//div[3]//div[1]//div[1]//div[1]//div[1]//div[2]//div[1]//div[1]//div[1]//div[1]//div[2]//select[1]"))
+state.select_by_visible_text('Thimphu')
+
+qualification=Select(wd.find_element(By.XPATH,"//div[1]//div[3]//div[1]//div[1]//div[1]//div[1]//div[2]//div[1]//div[1]//div[1]//div[1]//div[3]//select[1]"))
+qualification.select_by_visible_text("Diploma")
+
+
+element = wd.find_element(By.XPATH,'//button[@class="inline-flex justify-center px-3 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"]')
+element.click()
+wait = WebDriverWait(wd, 180)
+displ=wait.until(EC.presence_of_element_located((By.XPATH,"//button[contains(normalize-space(),'View job details')]")))
+displ.click()
+
+dts=wait.until(EC.presence_of_all_elements_located((By.XPATH,'//*[@class="text-sm font-medium text-gray-500"]')))
+#texts = [element.text for element in dts]
+key_elements=[dt.text for dt in dts]
+
+dds=wait.until(EC.presence_of_all_elements_located((By.XPATH,'//*[@class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"]')))
+value_elements=[dd.text for dd in dds]
+print(key_elements,value_elements)
+
+table_elements=dict(zip(key_elements,value_elements))
+print(table_elements)
+
+df=pd.DataFrame(list(table_elements.items()), columns=['Key','Values'])
+print(df)
+
+# submit_button = WebDriverWait(wd, 10).until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Find Jobs']")))
+# submit_button.click()
+# selector=".p-4 .bg-white .border .rounded .shadow-sm"
+# revealed = wd.find_elements(By.CSS_SELECTOR, selector)
+# print(len(revealed))
+# errors = [NoSuchElementException, ElementNotInteractableException]
+# # Improved XPath or CSS selector (ensure accuracy)
+# wait = WebDriverWait(wd, timeout=20, poll_frequency=.2,
+#                      ignored_exceptions=errors)
+
+# for reveal in revealed:
+#     print(reveal.text)
+
+
+# Interact with the element (e.g., click, send keys, etc.)
+
+
+time.sleep(15)
