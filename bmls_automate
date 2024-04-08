@@ -1,0 +1,79 @@
+from selenium import webdriver
+from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.common import NoSuchElementException, ElementNotInteractableException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
+import time
+from selenium.webdriver.chrome.service import Service
+
+from selenium.webdriver.chrome.options import Options
+
+# Set Chrome options to run headless
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Run in headless mode
+chrome_options.add_argument("--disable-gpu")  # Disable GPU usage (needed for headless mode)
+# Set Chrome WebDriver service
+# Specify the path to ChromeDriver executable
+service_obj=Service(r"C:\Users\prem raj\Desktop\New folder (4)\automation\chromedriver-win64\chromedriver.exe")
+wd=webdriver.Chrome(service=service_obj, options=chrome_options)
+
+
+# Now use this 'driver' instance to interact with the WebDriver
+##in-case using selenium without downloading chromedriver
+#wd = webdriver.Chrome()
+url = "https://"
+wd.get(url)
+
+#implicitly waits for the site to open and load the data
+wd.implicitly_wait(15)
+
+#Selecting the find_jobs button
+element = wd.find_element(By.XPATH,'//button[@class="inline-flex justify-center px-3 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"]')
+element.click()
+
+##ignoring the StaleElementReferenceException and NoSuchElementException so code doesnt break abruptly
+ignored_exceptions=(NoSuchElementException,StaleElementReferenceException)
+#introducing explicit wait time with exception ignoring
+wait=WebDriverWait(wd,180,ignored_exceptions=ignored_exceptions)
+
+#getting the main job card page with different job_card elements
+job_cards = wait.until(EC.presence_of_all_elements_located((By.XPATH,'//div[@class="p-4 bg-white border rounded shadow-sm"]')))
+print(length_cards:=len(job_cards))
+
+#loop to index each job_element in the card
+for index, job in enumerate(job_cards, start=1):
+
+        try:
+            # Construct the XPath to locate the "View job details" button within the current job card
+            button_xpath = f'//div[@class="p-4 bg-white border rounded shadow-sm"][{index}]//button[contains(normalize-space(), "View job details")]'
+
+            # Click the "View job details" button
+            wait.until(EC.element_to_be_clickable((By.XPATH, button_xpath))).click()
+
+            # Wait for job details elements to be present
+            dds = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[@class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"]')))
+            print([dd.text for dd in dds])
+
+            print(index)
+
+            # Click the "Back" button to return to the main job list
+            back_button = wd.find_element(By.XPATH, "//button[contains(normalize-space(), 'Back')]")
+            back_button.click()
+
+            #wait till the elements load in the main job_card age
+            wait.until(EC.presence_of_all_elements_located((By.XPATH,'//div[@class="p-4 bg-white border rounded shadow-sm"]')))
+
+
+        except (StaleElementReferenceException, TimeoutException) as e:
+            # If an exception occurs, log the error and continue to the next job card
+            print(f"Error occurred for job card {index}: {e}")
+            continue
+
+        except Exception as e:
+            #if other exception errors occurs, log those errors
+            print(f"An error occurred: {e}")
+
+        # finally:
+        #     # Close the WebDriver session
+        #     wd.quit()   
